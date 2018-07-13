@@ -34,9 +34,9 @@ jobs:
             sudo ln -sf ~/.tfenv/bin/* /usr/bin
 
             sudo apt-get -y -qq update
-            sudo apt-get -y -qq install python3.5-dev
+            sudo apt-get -y -qq install python
             curl -O https://bootstrap.pypa.io/get-pip.py
-            python3.5 get-pip.py --user
+            python get-pip.py --user
 
             pip install awscli --upgrade --user
 
