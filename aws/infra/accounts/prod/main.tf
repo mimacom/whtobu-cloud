@@ -12,7 +12,6 @@ terraform {
     bucket = "com.mimacom.rety.terraform-state"
     key = "accounts/production.tfstate"
     region = "eu-central-1"
-    encrypt = "true"
     dynamodb_table = "terraform_state_lock"
   }
 }

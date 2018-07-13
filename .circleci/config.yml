@@ -32,7 +32,7 @@ jobs:
               git clone https://github.com/kamatama41/tfenv.git ~/.tfenv
             fi
             sudo ln -sf ~/.tfenv/bin/* /usr/bin
-            sudo pip install awscli --upgrade 
+            sudo pip install awscli --upgrade
 
       - restore_cache:
           keys:
