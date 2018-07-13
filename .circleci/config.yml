@@ -35,7 +35,7 @@ jobs:
 
             if [ ! -d ~/.local ]; then
               sudo apt-get -y -qq update
-              sudo apt-get -y -qq install python python-pip
+              sudo apt-get -y -qq install python python-pip python-dev
 
               pip install awscli --upgrade --user
             fi
