@@ -39,6 +39,7 @@ jobs:
 
               pip install awscli --upgrade --user
             fi
+            sudo rm -f /usr/bin/aws
             sudo ln -sf ~/.local/bin/* /usr/bin
 
       - restore_cache:
