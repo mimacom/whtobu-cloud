@@ -55,6 +55,9 @@ jobs:
                 terraform apply -auto-approve
              popd
 
+             # build lambda
+             ./aws/infra/modules/lambda/amazon-product-api/build.sh
+
              pushd  aws/infra/environments/p-fra
                tfenv install && \
                terraform init -upgrade && \

@@ -41,3 +41,28 @@ resource "aws_iam_role_policy_attachment" "kms_policy_attachment" {
   role = "${aws_iam_role.amazon_product_api_role.name}"
   policy_arn = "${aws_iam_policy.kms_policy.arn}"
 }
+
+
+resource "aws_iam_policy" "secretsmanager_policy" {
+  name = "${var.environment}-${var.name}-role-secretsmanager-policy"
+  description = "Secrets Manager policy"
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "secretsmanager:GetSecretValue"
+            ],
+            "Resource": "arn:aws:secretsmanager:::secret:lambda/${var.name}"
+        }
+    ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "secretsmanager_policy_attachment" {
+  role = "${aws_iam_role.amazon_product_api_role.name}"
+  policy_arn = "${aws_iam_policy.secretsmanager_policy.arn}"
+}
