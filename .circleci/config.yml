@@ -45,11 +45,12 @@ jobs:
             - ~/.tfenv
         
       - deploy:
-         name: Deploy Bulktrade Portal
-         command: |
+          name: Deploy Bulktrade Portal
+          command: |
            if [ "${CIRCLE_BRANCH}" == "master" ] || [ "${CIRCLE_BRANCH}" == "develop" ]; then
              cd aws/infra/accounts/prod && \
              terraform init -upgrade && \
              terraform apply -auto-approve
            fi
-         - run: echo "cleanup"
+           
+      - run: echo "cleanup"
