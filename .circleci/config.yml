@@ -26,12 +26,14 @@ jobs:
             - tfenv
 
       - run:
-          name: Install tfenv
+          name: Install dependencies
           command: |
             if [ ! -d ~/.tfenv ]; then
               git clone https://github.com/kamatama41/tfenv.git ~/.tfenv
             fi
             sudo ln -sf ~/.tfenv/bin/* /usr/bin
+
+            pip install awscli --upgrade --user
 
       - restore_cache:
           keys:
