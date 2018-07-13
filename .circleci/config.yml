@@ -33,8 +33,8 @@ jobs:
             fi
             sudo ln -sf ~/.tfenv/bin/* /usr/bin
 
-            apt-get -y -qq update
-            apt-get -y -qq install python3.5-dev
+            sudo apt-get -y -qq update
+            sudo apt-get -y -qq install python3.5-dev
             curl -O https://bootstrap.pypa.io/get-pip.py
             python3.5 get-pip.py --user
 
