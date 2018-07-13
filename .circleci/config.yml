@@ -33,12 +33,13 @@ jobs:
             fi
             sudo ln -sf ~/.tfenv/bin/* /usr/bin
 
-            sudo apt-get -y -qq update
-            sudo apt-get -y -qq install python
-            curl -O https://bootstrap.pypa.io/get-pip.py
-            python get-pip.py --user
+            if [ ! -d ~/.local ]; then
+              sudo apt-get -y -qq update
+              sudo apt-get -y -qq install python python-pip
 
-            pip install awscli --upgrade --user
+              pip install awscli --upgrade --user
+            fi
+            sudo ln -sf ~/.local/bin/* /usr/bin
 
       - restore_cache:
           keys:
