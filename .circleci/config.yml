@@ -49,8 +49,9 @@ jobs:
           command: |
            if [ "${CIRCLE_BRANCH}" == "master" ] || [ "${CIRCLE_BRANCH}" == "develop" ]; then
              cd aws/infra/accounts/prod && \
+             tfenv install && \
              terraform init -upgrade && \
              terraform apply -auto-approve
            fi
-           
+
       - run: echo "cleanup"
