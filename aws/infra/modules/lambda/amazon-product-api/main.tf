@@ -11,11 +11,22 @@ resource "aws_lambda_function" "amazon_product_api" {
   kms_key_arn = "${data.aws_kms_alias.default.target_key_arn}"
 
   tags {
-    Name = "${var.environment}-bulktrade-v1-sms-consumer"
+    Name = "${var.environment}-${var.name}-amazon-product-api"
     Environment = "${var.environment}"
   }
 
   lifecycle {
     create_before_destroy = true
   }
+}
+
+resource "aws_lambda_permission" "apigw" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = "${aws_lambda_function.amazon_product_api.arn}"
+  principal     = "apigateway.amazonaws.com"
+
+  # The /*/* portion grants access from any method on any resource
+  # within the API Gateway "REST API".
+  source_arn = "${aws_api_gateway_deployment.amazon_product_api.execution_arn}/*/*"
 }

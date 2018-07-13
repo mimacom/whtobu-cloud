@@ -56,7 +56,15 @@ exports.handler = function (event, context, callback) {
             }).then(function(results){
                 console.log("Results", util.inspect(results, { depth: 10 }));
 
-                callback(null, results);
+                let response = {
+                    statusCode: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8',
+                    },
+                    body: JSON.stringify(results),
+                };
+
+                callback(null, response);
             }).catch(function(err){
                 console.log("Error", util.inspect(err, { depth: 10 }));
                 callback(new Error("GENERIC ERROR"));
