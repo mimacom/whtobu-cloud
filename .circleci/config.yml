@@ -32,7 +32,6 @@ jobs:
               git clone https://github.com/kamatama41/tfenv.git ~/.tfenv
             fi
             sudo ln -sf ~/.tfenv/bin/* /usr/bin
-            sudo pip install awscli --upgrade
 
       - restore_cache:
           keys:
@@ -49,10 +48,17 @@ jobs:
           name: Deploy Bulktrade Portal
           command: |
            if [ "${CIRCLE_BRANCH}" == "master" ] || [ "${CIRCLE_BRANCH}" == "develop" ]; then
-             cd aws/infra/environments/p-fra && \
-             tfenv install && \
-             terraform init -upgrade && \
-             terraform apply -auto-approve
+             pushd aws/infra/accounts/prod
+                tfenv install && \
+                terraform init -upgrade && \
+                terraform apply -auto-approve
+             popd
+
+             pushd  aws/infra/environments/p-fra
+               tfenv install && \
+               terraform init -upgrade && \
+               terraform apply -auto-approve
+             popd
            fi
 
       - run: echo "cleanup"
