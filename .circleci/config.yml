@@ -49,7 +49,7 @@ jobs:
           name: Deploy Bulktrade Portal
           command: |
            if [ "${CIRCLE_BRANCH}" == "master" ] || [ "${CIRCLE_BRANCH}" == "develop" ]; then
-             cd aws/infra/environment/p-fra && \
+             cd aws/infra/environments/p-fra && \
              tfenv install && \
              terraform init -upgrade && \
              terraform apply -auto-approve
