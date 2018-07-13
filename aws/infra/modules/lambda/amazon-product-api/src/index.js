@@ -7,6 +7,8 @@ var AWS = require('aws-sdk'),
 
 var amazon = require('amazon-product-api');
 
+const util = require('util');
+
 console.log('Loading function');
 
 exports.handler = function (event, context, callback) {
@@ -26,6 +28,8 @@ exports.handler = function (event, context, callback) {
                 console.log("The request was invalid due to: " + err.message);
             else if(err.code === 'InvalidParameterException')
                 console.log("The request had invalid params: " + err.message);
+
+            callback(new Error("GENERIC ERROR"));
         } else {
             // Decrypted secret using the associated KMS CMK
             // Depending on whether the secret was a string or binary, one of these fields will be populated
@@ -36,10 +40,9 @@ exports.handler = function (event, context, callback) {
             }
         }
 
-        console.log("Secret:", secret);
-        console.log("Data:", data);
-
         if (secret) {
+            secret = JSON.parse(secret);
+
             var client = amazon.createClient({
                 awsId: secret.awsId,
                 awsSecret: secret.awsSecret,
@@ -47,11 +50,16 @@ exports.handler = function (event, context, callback) {
             });
 
             client.itemSearch({
-                keywords: 'Apple Watch'
+                keywords: 'Apple Watch',
+                domain: 'webservices.amazon.de',
+                responseGroup: 'Images,ItemAttributes,Reviews,SalesRank'
             }).then(function(results){
-                console.log(results);
+                console.log("Results", util.inspect(results, { depth: 10 }));
+
+                callback(null, results);
             }).catch(function(err){
-                console.log(err);
+                console.log("Error", util.inspect(err, { depth: 10 }));
+                callback(new Error("GENERIC ERROR"));
             });
         }
     });
