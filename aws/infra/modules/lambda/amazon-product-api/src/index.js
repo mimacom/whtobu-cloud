@@ -28,8 +28,10 @@ exports.handler = function (event, context, callback) {
                 console.log("The request was invalid due to: " + err.message);
             else if(err.code === 'InvalidParameterException')
                 console.log("The request had invalid params: " + err.message);
+            else
+                console.log("Secret Error", util.inspect(err, { depth: 10 }));
 
-            callback(new Error("GENERIC ERROR"));
+            callback(new Error("SECRET ERROR"));
         } else {
             // Decrypted secret using the associated KMS CMK
             // Depending on whether the secret was a string or binary, one of these fields will be populated

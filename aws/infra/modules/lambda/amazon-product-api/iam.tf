@@ -55,7 +55,11 @@ resource "aws_iam_policy" "secretsmanager_policy" {
             "Action": [
                 "secretsmanager:GetSecretValue"
             ],
-            "Resource": "arn:aws:secretsmanager:::secret:lambda/${var.name}"
+            "Resource": [
+                "arn:aws:secretsmanager:::secret:lambda/${var.name}",
+                "arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:lambda/${var.name}",
+                "arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:lambda/${var.name}-*"
+            ]
         }
     ]
 }
@@ -65,4 +69,32 @@ EOF
 resource "aws_iam_role_policy_attachment" "secretsmanager_policy_attachment" {
   role = "${aws_iam_role.amazon_product_api_role.name}"
   policy_arn = "${aws_iam_policy.secretsmanager_policy.arn}"
+}
+
+resource "aws_iam_policy" "log_policy" {
+  name = "${var.environment}-${var.name}-role-log-policy"
+  description = "Log policy"
+  policy = <<EOF
+{
+   "Version":"2012-10-17",
+   "Statement":[
+      {
+         "Effect":"Allow",
+         "Action":[
+            "logs:CreateLogStream",
+            "logs:CreateLogGroup",
+            "logs:PutLogEvents"
+         ],
+         "Resource":[
+            "arn:aws:logs:*"
+         ]
+      }
+   ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "log_policy_attachment" {
+  role = "${aws_iam_role.amazon_product_api_role.name}"
+  policy_arn = "${aws_iam_policy.log_policy.arn}"
 }

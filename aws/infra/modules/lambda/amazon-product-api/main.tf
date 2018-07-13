@@ -20,13 +20,20 @@ resource "aws_lambda_function" "amazon_product_api" {
   }
 }
 
-resource "aws_lambda_permission" "apigw" {
+resource "aws_lambda_permission" "api_gateway_permission" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
   function_name = "${aws_lambda_function.amazon_product_api.arn}"
   principal     = "apigateway.amazonaws.com"
 
-  # The /*/* portion grants access from any method on any resource
-  # within the API Gateway "REST API".
-  source_arn = "${aws_api_gateway_deployment.amazon_product_api.execution_arn}/*/*"
+  source_arn = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_resource.proxy.rest_api_id}/*/POST${aws_api_gateway_resource.proxy.path}"
+}
+
+resource "aws_lambda_permission" "api_gateway_permission_root" {
+  statement_id  = "AllowAPIGatewayInvokeRoot"
+  action        = "lambda:InvokeFunction"
+  function_name = "${aws_lambda_function.amazon_product_api.arn}"
+  principal     = "apigateway.amazonaws.com"
+
+  source_arn = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_resource.proxy.rest_api_id}/POST${aws_api_gateway_resource.proxy.path}"
 }
