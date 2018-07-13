@@ -37,6 +37,7 @@ exports.handler = function (event, context, callback) {
         }
 
         console.log("Secret:", secret);
+        console.log("Data:", data);
 
         if (secret) {
             var client = amazon.createClient({

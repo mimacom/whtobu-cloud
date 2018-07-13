@@ -28,7 +28,8 @@ resource "aws_iam_policy" "kms_policy" {
         {
             "Effect": "Allow",
             "Action": [
-                "kms:Decrypt"
+                "kms:Decrypt",
+                "kms:GenerateDataKey*"
             ],
             "Resource": "${data.aws_kms_alias.default.target_key_arn}"
         }
