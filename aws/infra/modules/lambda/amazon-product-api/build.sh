@@ -3,7 +3,7 @@ set -e
 
 CURRENT_PATH=`dirname $0`
 
-rm -f ${CURRENT_PATH}/dist/
+rm -rf ${CURRENT_PATH}/dist/
 rm -f amazon-product-api.zip
 mkdir -p ${CURRENT_PATH}/dist/
 cp ${CURRENT_PATH}/src/* ${CURRENT_PATH}/dist/
