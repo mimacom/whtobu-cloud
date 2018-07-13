@@ -10,9 +10,15 @@ terraform {
 
   backend "s3" {
     bucket = "com.mimacom.rety.terraform-state"
-    key = "accounts/production.tfstate"
+    key = "environments/p-fra.tfstate"
     region = "eu-central-1"
     encrypt = "true"
     dynamodb_table = "terraform_state_lock"
   }
+}
+
+module "amazon_product_api" {
+  source = "../../modules/lambda/amazon-product-api"
+  name   = "amazon-product-api"
+  environment = "pp-fra"
 }
