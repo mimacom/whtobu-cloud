@@ -33,9 +33,10 @@ jobs:
             fi
             sudo ln -sf ~/.tfenv/bin/* /usr/bin
 
-      - restore_cache:
-          keys:
-            - tfenv
+      - save_cache:
+          key: tfenv
+          paths:
+            - ~/.tfenv
 
       - run: echo "run"
 
