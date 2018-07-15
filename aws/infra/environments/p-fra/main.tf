@@ -20,5 +20,5 @@ terraform {
 module "amazon_product_api" {
   source = "../../modules/lambda/amazon-product-api"
   name   = "amazon-product-api"
-  environment = "pp-fra"
+  environment = "p-fra"
 }
