@@ -48,19 +48,21 @@ resource "aws_api_gateway_deployment" "amazon_product_api" {
     "aws_api_gateway_integration.lambda_root",
   ]
 
-//  stage_description = "Deployed at: ${timestamp()}"
+  //  stage_description = "Deployed at: ${timestamp()}"
 
   rest_api_id = "${aws_api_gateway_rest_api.amazon_product_api.id}"
   stage_name  = "${var.environment}"
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_api_gateway_domain_name" "amazon_product_api_rety_io" {
   domain_name     = "amazon-product-api.rety.io"
   certificate_arn = "${aws_acm_certificate.certificate.arn}"
+}
+
+resource "aws_api_gateway_base_path_mapping" "base_path_mapping" {
+  api_id      = "${aws_api_gateway_rest_api.amazon_product_api.id}"
+  stage_name  = "${aws_api_gateway_deployment.amazon_product_api.stage_name}"
+  domain_name = "${aws_api_gateway_domain_name.amazon_product_api_rety_io.domain_name}"
 }
 
 data "aws_route53_zone" amazon_product_api_rety_io {
