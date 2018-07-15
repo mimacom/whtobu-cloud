@@ -20,20 +20,11 @@ resource "aws_lambda_function" "amazon_product_api" {
   }
 }
 
-resource "aws_lambda_permission" "api_gateway_permission" {
+resource "aws_lambda_permission" "api_gateway_root_permission" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
   function_name = "${aws_lambda_function.amazon_product_api.arn}"
   principal     = "apigateway.amazonaws.com"
 
-  source_arn = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_resource.proxy.rest_api_id}/*/POST${aws_api_gateway_resource.proxy.path}"
-}
-
-resource "aws_lambda_permission" "api_gateway_permission_root" {
-  statement_id  = "AllowAPIGatewayInvokeRoot"
-  action        = "lambda:InvokeFunction"
-  function_name = "${aws_lambda_function.amazon_product_api.arn}"
-  principal     = "apigateway.amazonaws.com"
-
-  source_arn = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_resource.proxy.rest_api_id}/POST${aws_api_gateway_resource.proxy.path}"
+  source_arn = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.amazon_product_api.id}/*/*/*"
 }
