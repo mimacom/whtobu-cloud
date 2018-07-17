@@ -20,7 +20,6 @@ exports.handler = function (event, context, callback) {
     });
 
     client.getSecretValue({SecretId: secretName}, function(err, data) {
-
         if(err) {
             if(err.code === 'ResourceNotFoundException')
                 console.log("The requested secret " + secretName + " was not found");
@@ -51,10 +50,27 @@ exports.handler = function (event, context, callback) {
                 awsTag: secret.awsTag
             });
 
+            let data = JSON.parse(event.body);
+
+            if (!data) {
+                console.log("Error! Could not parse event body as JSON!", util.inspect(event.body, { depth: 10 }));
+                callback(new Error("PARAM ERROR"));
+
+                return
+            }
+
             client.itemSearch({
-                keywords: 'Apple Watch',
+                keywords: data.keywords,
+                manufacturer: data.manufacturer,
+                merchantId: 'Amazon',
                 domain: 'webservices.amazon.de',
-                responseGroup: 'Images,ItemAttributes,Reviews,SalesRank'
+                condition: 'New',
+                searchIndex: data.searchIndex,
+                responseGroup: 'Images,ItemAttributes,Reviews,SalesRank',
+                sort: 'salesrank'
+            // client.itemLookup({
+            //     itemId: 'B075M2DTZV',
+            //     domain: 'webservices.amazon.de'
             }).then(function(results){
                 console.log("Results", util.inspect(results, { depth: 10 }));
 
