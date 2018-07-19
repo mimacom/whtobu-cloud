@@ -66,7 +66,7 @@ exports.handler = function (event, context, callback) {
                 domain: 'webservices.amazon.de',
                 condition: 'New',
                 searchIndex: data.searchIndex,
-                responseGroup: 'Images,ItemAttributes,Reviews,SalesRank',
+                responseGroup: 'Images,ItemAttributes,Reviews,OfferSummary',
                 sort: 'salesrank'
             // client.itemLookup({
             //     itemId: 'B075M2DTZV',
@@ -74,15 +74,65 @@ exports.handler = function (event, context, callback) {
             }).then(function(results){
                 console.log("Results", util.inspect(results, { depth: 10 }));
 
-                let response = {
-                    statusCode: 200,
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8',
-                    },
-                    body: JSON.stringify(results),
-                };
+                let result = [];
 
-                callback(null, response);
+                try {
+                    for (let i=0; i < results.length; i++) {
+                        let product = results[i];
+
+                        console.log("Product:", product);
+
+                        let name;
+                        try {
+                            name = product['ItemAttributes'][0]['Title'][0];
+                        } catch (e) {
+                            console.log("Error:", e);
+                        }
+
+                        let detailPageUrl;
+                        try {
+                            detailPageUrl = product['DetailPageURL'][0];
+                        } catch (e) {
+                            console.log("Error:", e);
+                        }
+
+                        let image;
+                        try {
+                            image = product['LargeImage'][0]['URL'][0];
+                        } catch (e) {
+                            console.log("Error:", e);
+                        }
+
+                        let price;
+                        try {
+                            price = product['OfferSummary'][0]['LowestNewPrice'][0]['FormattedPrice'][0];
+                        } catch (e) {
+                            console.log("Error:", e);
+                        }
+
+                        result.push({
+                            'name': name,
+                            'detailPageUrl': detailPageUrl,
+                            'image': image,
+                            'price': price
+                        });
+                    }
+
+                    let response = {
+                        statusCode: 200,
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8',
+                        },
+                        body: JSON.stringify(result),
+                    };
+
+                    console.log("Response:", response);
+
+                    callback(null, response);
+                } catch (e) {
+                    console.error("Error:", e);
+                    callback(new Error(e));
+                }
             }).catch(function(err){
                 console.log("Error", util.inspect(err, { depth: 10 }));
                 callback(new Error("GENERIC ERROR"));
