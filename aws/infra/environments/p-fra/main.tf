@@ -22,3 +22,9 @@ module "amazon_product_api" {
   name   = "amazon-product-api"
   environment = "p-fra"
 }
+
+module "amazon_product_kinesis_stream" {
+  source = "../../modules/kinesis"
+  environment = "p-fra"
+  name = "amazon-product-stream"
+}
